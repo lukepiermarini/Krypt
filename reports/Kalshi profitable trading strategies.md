@@ -105,3 +105,19 @@ The 38 crypto presets have one good use: run them on your collected data as a **
 The realistic edge on Kalshi in 2026 is not cleverness. It is to avoid the bias that costs everyone else money (buying longshots, crossing spreads, paying fees twice) in markets too small for the professionals to bother with. That edge has a cap. At a few percent per trade on perhaps $100–150 deployed per day, a working version earns pocket money, and its main value is teaching you to measure. The evidence also has a shelf life. The Whelan sample ends in April 2025, the bias was weakest in 2025, and fees change monthly. So whether the edge still exists today is exactly the question your own collected data has to answer.
 
 Let the order of operations decide for you. First, run the calibration check on recorded weather prices. If favorites in your data no longer win more often than their prices imply, stop there. If they do, run the paper agent until it has about a thousand fills, then trade tiny live size. Only after that look at the add-ons: the station-correct forecast model, liquidity-reward quoting, or a better AI agent. The strategies most beginners start with, 15-minute crypto and copying sportsbook lines, belong at the bottom of the list, because they are crowded, fast, or already efficiently priced.
+
+---
+
+## Addendum (Oct 8, 2026): backtest on real Kalshi data
+
+After this report, the top recommendation was tested on 10,380 settled Kalshi temperature markets (27 US
+city series, May–Oct 2026) with `tools/weather_favorites_backtest.py`.
+
+- **Buying favorites at the ask (taker) loses** at every entry time, from −0.9% to −5.2% per $.
+- **The same trade as a resting limit order**, with no maker fee on weather, about 20–24h before close,
+  on **daily highs only**, returned **+2.5% to +3.6% per $ (t = 2.6–3.7)**. It held up under a strict
+  fill rule. Daily lows were negative.
+- Nearly all of those fills are NO orders on near-miss brackets, which fits the favorite-longshot story.
+
+The strategy is now "Weather NO-maker". See `AGENT_SETUP.md` for the setup and the forward paper test,
+and `results/` for the full tables.
