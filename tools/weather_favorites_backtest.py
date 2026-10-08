@@ -209,6 +209,11 @@ def trades(markets: list[dict]) -> list[dict]:
     return rows
 
 
+def fmt_t(t: float) -> str:
+    # Zero-variance cells (every contract lost) give a meaningless huge t.
+    return f"{t:+.1f}" if abs(t) < 50 else "n/a"
+
+
 def stats(pnls: list[float], clusters: list[str]) -> tuple[float, float, float]:
     """Mean, event-clustered SE, t."""
     n = len(pnls)
@@ -257,7 +262,7 @@ def analyse(series_list: list[str], out_md: Path) -> str:
             avgp = sum(r["take"] for r in sel) / len(sel)
             wr = sum(r["won"] for r in sel) / len(sel)
             lines.append(f"| {h} | {lo*100:.0f}–{hi*100:.0f}¢ | {len(sel)} | {avgp*100:.1f}¢ | "
-                         f"{wr*100:.1f}% | {mean*100:+.1f}% | {t:+.1f} |")
+                         f"{wr*100:.1f}% | {mean*100:+.1f}% | {fmt_t(t)} |")
     lo, hi = STRATEGY_BAND
     lines += [
         "",
@@ -283,7 +288,7 @@ def analyse(series_list: list[str], out_md: Path) -> str:
             wr = sum(r["won"] for r in sel) / len(sel)
             cost = sum(r[key] for r in sel) / len(sel)
             lines.append(f"| {h} | {mode} | {len(sel)} | {wr*100:.1f}% | {cost*100:.1f}¢ | "
-                         f"{mean*100:+.2f}% | {sum(pnl)/len(pnl)*100:+.2f}¢ | {t:+.1f} |")
+                         f"{mean*100:+.2f}% | {sum(pnl)/len(pnl)*100:+.2f}¢ | {fmt_t(t)} |")
     text = "\n".join(lines) + "\n"
     out_md.parent.mkdir(parents=True, exist_ok=True)
     out_md.write_text(text)
